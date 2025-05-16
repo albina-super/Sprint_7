@@ -1,3 +1,5 @@
+from json import loads
+from allure import step
 import requests
 
 from data import ORDER_URL, BASE_URL
@@ -5,10 +7,13 @@ from data import ORDER_URL, BASE_URL
 
 class OrderMethods:
 
+    @step('Создаем ордер')
     def create_order(self, params):
         response = requests.post(f'{BASE_URL}{ORDER_URL}', json=params)
-        return response.json()
+        return response.status_code, loads(response.text)
 
-    def get_list_orders(self, params):
-        response = requests.get(f'{BASE_URL}{ORDER_URL}/list')
-        return response.json()
+
+    @step('Получаеи список ордеров')
+    def get_list_orders(self):
+        response = requests.get(f'{BASE_URL}{ORDER_URL}')
+        return response.status_code, loads(response.text)
